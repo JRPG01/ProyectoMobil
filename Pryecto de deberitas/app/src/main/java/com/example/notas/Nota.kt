@@ -84,7 +84,7 @@ fun TopAppNotas(modifier: Modifier = Modifier) {
                         IconButton(onClick = {}) {
                             Icon(
                                 imageVector = Icons.Outlined.DateRange,
-                                contentDescription = "FEcha de tarea"
+                                contentDescription = "Fecha de tarea"
                             )
                         }
                     }
