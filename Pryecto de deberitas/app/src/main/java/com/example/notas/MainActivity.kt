@@ -27,6 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +38,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.notas.ui.theme.NotasTheme
+import com.example.notas.ui.theme.NoteUiState
+import com.example.notas.ui.theme.NotesViewModel
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -86,7 +90,10 @@ fun TopAppBarExample(modifier: Modifier = Modifier) {
 @ExperimentalMaterial3Api
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldExample() {
+fun ScaffoldExample(
+    noteViewModel: NotesViewModel = viewModel()
+) {
+    val noteUiState by noteViewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             TopAppBarExample()
@@ -108,7 +115,9 @@ fun ScaffoldExample() {
             )
             Card {
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
                     text = "Texto por defecto para probar")
             }
         }
