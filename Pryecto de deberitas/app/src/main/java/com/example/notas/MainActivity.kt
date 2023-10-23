@@ -39,9 +39,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.findNavController
+import com.example.notas.Navegacion.Navegation
 import com.example.notas.ui.theme.NotasTheme
 import com.example.notas.ui.theme.NoteUiState
 import com.example.notas.ui.theme.NotesViewModel
+import com.example.notas.ui.theme.ScaffoldExample
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -54,81 +60,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ScaffoldExample()
+                    Navegation(navHostController = rememberNavController())
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopAppBarExample(modifier: Modifier = Modifier) {
-    var name by remember {
-        mutableStateOf("Barra de busquedas")
-    }
-    CenterAlignedTopAppBar(
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextField(
-                    value = "",
-                    onValueChange = {name = it},
-                    modifier = Modifier.fillMaxWidth(),
-                    label = {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
-
-                    }
-                )
-
-            }
-        },
-        modifier = modifier
-    )
-}
-@ExperimentalMaterial3Api
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ScaffoldExample(
-    noteViewModel: NotesViewModel = viewModel()
-) {
-    val noteUiState by noteViewModel.uiState.collectAsState()
-    Scaffold(
-        topBar = {
-            TopAppBarExample()
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {  }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text = " Aqui se pondran las notas"
-            )
-            Card {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    text = "Texto por defecto para probar")
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NotasTheme {
-        ScaffoldExample()
-    }
-}

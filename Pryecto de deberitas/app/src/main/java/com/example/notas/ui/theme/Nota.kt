@@ -1,4 +1,4 @@
-package com.example.notas
+package com.example.notas.ui.theme
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -14,22 +14,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -47,12 +39,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.notas.ui.theme.NotasTheme
-import com.example.notas.ui.theme.md_theme_dark_onBackground
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.notas.Navegacion.Screean
 import java.util.Calendar
 import java.util.Date
 
@@ -67,7 +58,7 @@ class Nota : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ScaffoldNotas()
+                    ScaffoldNotas(navController = rememberNavController())
                 }
             }
         }
@@ -118,6 +109,12 @@ fun TopAppNotas(modifier: Modifier = Modifier) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                IconButton(onClick = {  }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Regresa al menu"
+                    )
+                }
                 TextField(
                     value = "TITULO",
                     onValueChange = {name = it},
@@ -145,7 +142,8 @@ fun TopAppNotas(modifier: Modifier = Modifier) {
 @ExperimentalMaterial3Api
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldNotas() {
+fun ScaffoldNotas(navController: NavController) {
+
     var name by remember {
         mutableStateOf("Barra de busquedas")
     }
@@ -159,7 +157,7 @@ fun ScaffoldNotas() {
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
                 Row {
-                    Button(onClick = {}) {
+                    Button(onClick = {navController.navigate(Screean.NotasPrincipalScreean.route)}) {
                         Icon(Icons.Default.Add , contentDescription = "Add Imagen")
                         Text(text = "Img")
                     }
@@ -188,12 +186,5 @@ fun ScaffoldNotas() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun NOtasPreview() {
-    NotasTheme {
-        ScaffoldNotas()
-    }
-}
+
 
