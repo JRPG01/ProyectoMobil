@@ -54,8 +54,7 @@ fun TopAppBarExample(modifier: Modifier = Modifier) {
                     }
                 )
 
-            }
-        },
+            }        },
         modifier = modifier
     )
 }

@@ -67,7 +67,8 @@ class Nota : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppNotas(modifier: Modifier = Modifier) {
+fun TopAppNotas(naveController: NavController,
+    modifier: Modifier = Modifier) {
     var name by remember {
         mutableStateOf("Barra de busquedas")
     }
@@ -109,7 +110,7 @@ fun TopAppNotas(modifier: Modifier = Modifier) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = {  }) {
+                IconButton(onClick = {naveController.navigate(Screean.NotasPrincipalScreean.route)}) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Regresa al menu"
@@ -149,7 +150,7 @@ fun ScaffoldNotas(navController: NavController) {
     }
     Scaffold(
         topBar = {
-            TopAppNotas()
+            TopAppNotas(naveController = navController)
         },
         bottomBar = {
             BottomAppBar(
@@ -157,7 +158,7 @@ fun ScaffoldNotas(navController: NavController) {
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
                 Row {
-                    Button(onClick = {navController.navigate(Screean.NotasPrincipalScreean.route)}) {
+                    Button(onClick = {}) {
                         Icon(Icons.Default.Add , contentDescription = "Add Imagen")
                         Text(text = "Img")
                     }
