@@ -70,7 +70,7 @@ class Nota : ComponentActivity() {
 fun TopAppNotas(naveController: NavController,
     modifier: Modifier = Modifier) {
     var name by remember {
-        mutableStateOf("Barra de busquedas")
+        mutableStateOf("")
     }
     /*calendario*/
     // Fetching the Local Context
@@ -117,7 +117,7 @@ fun TopAppNotas(naveController: NavController,
                     )
                 }
                 TextField(
-                    value = "TITULO",
+                    value = name,
                     onValueChange = {name = it},
                     modifier = Modifier.fillMaxWidth(),
                     trailingIcon = {
@@ -140,6 +140,8 @@ fun TopAppNotas(naveController: NavController,
         modifier = modifier.fillMaxWidth()
     )
 }
+
+
 @ExperimentalMaterial3Api
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -177,7 +179,7 @@ fun ScaffoldNotas(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             TextField(
-                value = "Cuerpo de la Nota",
+                value = name,
                 onValueChange = {name = it},
                 modifier = Modifier
                     .fillMaxWidth()

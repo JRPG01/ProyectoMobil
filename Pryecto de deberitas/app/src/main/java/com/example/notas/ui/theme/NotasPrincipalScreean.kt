@@ -33,19 +33,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.notas.Navegacion.Screean
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarExample(modifier: Modifier = Modifier) {
     var name by remember {
-        mutableStateOf("Barra de busquedas")
+        mutableStateOf("")
     }
+
     CenterAlignedTopAppBar(
         title = {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextField(
-                    value = "",
+                    value = name,
                     onValueChange = {name = it},
                     modifier = Modifier.fillMaxWidth(),
                     label = {
