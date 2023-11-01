@@ -16,7 +16,7 @@ interface TareasDao {
     @Delete
     suspend fun delete(tareas: Tarea)
     @Query("SELECT * from notas WHERE id = id")
-    fun getItem(id: Int): Flow<Tarea>
+    fun getTareas(id: Int): Flow<Tarea>
     @Query("SELECT * from tareas ORDER BY Titulo ASC")
-    fun getAllItems(): Flow<List<Tarea>>
+    fun getAllTareas(): Flow<List<Tarea>>
 }
