@@ -36,10 +36,10 @@ import com.example.notas.Navegacion.Screean
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarExample(modifier: Modifier = Modifier) {
-    var name by remember {
-        mutableStateOf("")
-    }
+fun TopAppBarExample(searchChanged: (String) -> Unit,
+                     currentSearch:String,
+                     modifier: Modifier = Modifier) {
+
 
     CenterAlignedTopAppBar(
         title = {
@@ -47,8 +47,8 @@ fun TopAppBarExample(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextField(
-                    value = name,
-                    onValueChange = {name = it},
+                    value = currentSearch,
+                    onValueChange = searchChanged,
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         Icon(Icons.Default.Search, contentDescription = "Search")
@@ -64,13 +64,14 @@ fun TopAppBarExample(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldExample(navController: NavController,
-    noteViewModel: NotesViewModel = viewModel()
+                    noteViewModel: NotesViewModel= viewModel()
 ) {
     val noteUiState by noteViewModel.uiState.collectAsState()
     Scaffold(
 
         topBar = {
-            TopAppBarExample()
+            TopAppBarExample(searchChanged = {noteViewModel.updateUserGuess(it)},
+                currentSearch = noteViewModel.currentSearch)
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { navController.navigate(Screean.Notas.route) }) {
@@ -85,7 +86,7 @@ fun ScaffoldExample(navController: NavController,
         ) {
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = " Aqui se pondran las notas"
+                text = "Aqui se pondran las notas"
             )
             Card {
                 Text(

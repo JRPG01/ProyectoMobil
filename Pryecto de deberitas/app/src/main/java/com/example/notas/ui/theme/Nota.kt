@@ -31,6 +31,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.notas.Navegacion.Screean
@@ -70,7 +72,7 @@ class Nota : ComponentActivity() {
 fun TopAppNotas(naveController: NavController,
     modifier: Modifier = Modifier) {
     var name by remember {
-        mutableStateOf("")
+        mutableStateOf("Barra de Busqueda")
     }
     /*calendario*/
     // Fetching the Local Context
@@ -123,7 +125,7 @@ fun TopAppNotas(naveController: NavController,
                     trailingIcon = {
                         IconButton(onClick ={
                         mDatePickerDialog.show()
-                        }, colors = IconButtonDefaults.iconButtonColors(Color(0XFF0F9D58)) ){
+                        }, colors = IconButtonDefaults.iconButtonColors(Color(0,0,0, 0)) ){
                             Icon(
                                 imageVector = Icons.Outlined.DateRange,
                                 contentDescription = "Fecha de tarea"
@@ -145,17 +147,18 @@ fun TopAppNotas(naveController: NavController,
 @ExperimentalMaterial3Api
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldNotas(navController: NavController) {
+fun ScaffoldNotas(navController: NavController,
+                  noteViewModel: NotesViewModel= viewModel()) {
 
-    var name by remember {
-        mutableStateOf("Barra de busquedas")
-    }
+    val noteUiState by noteViewModel.uiState.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppNotas(naveController = navController)
         },
         bottomBar = {
             BottomAppBar(
+
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
@@ -178,15 +181,33 @@ fun ScaffoldNotas(navController: NavController) {
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            TextField(
-                value = name,
-                onValueChange = {name = it},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
+            canvas(
+                noteChange = {noteViewModel.updateNote(it)},
+                currentNote = noteViewModel.currentNote,
             )
         }
     }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun canvas(noteChange: (String) -> Unit,
+           currentNote:String,
+           modifier: Modifier = Modifier) {
+
+     Scaffold(){innerPadding->
+
+         Column(modifier = Modifier
+             .padding(innerPadding),
+             verticalArrangement = Arrangement.spacedBy(16.dp),) {
+             TextField(value = currentNote,
+                 onValueChange =noteChange,
+                 modifier = modifier.fillMaxSize())
+
+         }
+
+
+     }
+
 }
 
 
