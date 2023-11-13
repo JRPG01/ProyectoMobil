@@ -170,13 +170,13 @@ fun ScaffoldNotas(navController: NavController,
                     }
                     Spacer(modifier = Modifier.size(22.dp))
                     Button(onClick = {}) {
-                        Icon(Icons.Default.Done , contentDescription = "Save note")
-                        Text(text = "Guardar")
+                        Icon(Icons.Default.Add , contentDescription = "Add Imagen")
+                        Text(text = "Video")
                     }
                     Spacer(modifier = Modifier.size(22.dp))
                     Button(onClick = {}) {
-                        Icon(Icons.Default.Add , contentDescription = "Add Imagen")
-                        Text(text = "Video")
+                        Icon(Icons.Default.Done , contentDescription = "Save note")
+                        Text(text = "Guardar")
                     }
                 }
             }

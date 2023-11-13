@@ -8,11 +8,11 @@ interface AppContainer {
 }
 class AppDataContainer(private val context: Context) : AppContainer {
 
-    override val tareasRepository: TareasRepository by lazy {
-        OfflinesTareasRepository(NotasDatabase.getDatabase(context).TareasDao())
-    }
+
     override val notasRepository: NotasRepository by lazy {
         OfflineNotasRepository(NotasDatabase.getDatabase(context).NotaDao())
     }
-
+    override val tareasRepository: TareasRepository by lazy {
+        OfflinesTareasRepository(NotasDatabase.getDatabase(context).TareasDao())
+    }
 }
