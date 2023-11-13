@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -167,10 +168,15 @@ fun ScaffoldNotas(navController: NavController,
                         Icon(Icons.Default.Add , contentDescription = "Add Imagen")
                         Text(text = "Img")
                     }
-                    Spacer(modifier = Modifier.size(32.dp))
+                    Spacer(modifier = Modifier.size(22.dp))
                     Button(onClick = {}) {
                         Icon(Icons.Default.Add , contentDescription = "Add Imagen")
                         Text(text = "Video")
+                    }
+                    Spacer(modifier = Modifier.size(22.dp))
+                    Button(onClick = {}) {
+                        Icon(Icons.Default.Done , contentDescription = "Save note")
+                        Text(text = "Guardar")
                     }
                 }
             }
