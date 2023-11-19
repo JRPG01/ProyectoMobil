@@ -23,19 +23,23 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.notas.Navegacion.Screean
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
@@ -153,6 +158,10 @@ fun ScaffoldNotas(navController: NavController,
 
     val noteUiState by noteViewModel.uiState.collectAsState()
 
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppNotas(naveController = navController)
@@ -164,14 +173,9 @@ fun ScaffoldNotas(navController: NavController,
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
                 Row {
-                    Button(onClick = {}) {
+                    Button(onClick = {showBottomSheet = true}) {
                         Icon(Icons.Default.Add , contentDescription = "Add Imagen")
                         Text(text = "Img")
-                    }
-                    Spacer(modifier = Modifier.size(22.dp))
-                    Button(onClick = {}) {
-                        Icon(Icons.Default.Add , contentDescription = "Add Imagen")
-                        Text(text = "Video")
                     }
                     Spacer(modifier = Modifier.size(22.dp))
                     Button(onClick = {}) {
@@ -191,6 +195,31 @@ fun ScaffoldNotas(navController: NavController,
                 noteChange = {noteViewModel.updateNote(it)},
                 currentNote = noteViewModel.currentNote,
             )
+        }
+
+        // Screen content
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheet = false
+                },
+                sheetState = sheetState
+            ) {
+                Row {
+                    Spacer(modifier = Modifier.size(60.dp))
+                    Button(onClick = {}) {
+                        Icon(imageVector = Icons.Default.Done, contentDescription = "Camera Button")
+                        Text("Camara")
+                    }
+                    Spacer(modifier = Modifier.size(30.dp))
+                    Button(onClick = {}) {
+                        Icon(imageVector = Icons.Default.Done, contentDescription = "Galery Button")
+                        Text("Galeria")
+                    }
+                }
+                // Sheet content
+                Spacer(modifier = Modifier.size(50.dp))
+            }
         }
     }
 }
