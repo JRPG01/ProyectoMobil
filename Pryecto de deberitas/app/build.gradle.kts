@@ -76,4 +76,12 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation ("androidx.compose.ui:ui:1.0.5")
+    implementation ("androidx.compose.material:material:1.0.5")
+    implementation ("androidx.compose.ui:ui-tooling:1.0.5")
+    implementation ("com.google.android.exoplayer:exoplayer:2.15.1")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("com.google.android.exoplayer:exoplayer:2.15.1")
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
 }

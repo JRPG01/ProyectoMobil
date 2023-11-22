@@ -1,11 +1,15 @@
 package com.example.notas.ui.theme
 
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +21,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -47,6 +56,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -54,6 +64,10 @@ import com.example.notas.Navegacion.Screean
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
+import coil.compose.AsyncImage
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.ui.PlayerView
 
 class Nota : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -205,15 +219,70 @@ fun ScaffoldNotas(navController: NavController,
                 },
                 sheetState = sheetState
             ) {
+
+                var hasImage by remember {
+                    mutableStateOf(false)
+                }
+                var hasVideo by remember {
+                    mutableStateOf(false)
+                }
+                // 2
+                var imageUri by remember {
+                    mutableStateOf<Uri?>(null)
+                }
+
+                val imagePicker = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.GetContent(),
+                    onResult = { uri ->
+                        // TODO
+                        // 3
+                        hasImage = uri != null
+                        imageUri = uri
+                    }
+                )
+
+                val cameraLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.TakePicture(),
+                    onResult = { success ->
+                        hasImage = success
+                    }
+                )
+
+                val videoLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.CaptureVideo(),
+                    onResult = { success ->
+                        hasVideo = success
+                    }
+                )
+
+                val context = LocalContext.current
+
+                    // 4
+                    if ((hasImage or hasVideo) && imageUri != null) {
+                        // 5
+                        if(hasImage){
+                            AsyncImage(
+                                model = imageUri,
+                                modifier = Modifier.fillMaxWidth(),
+                                contentDescription = "Selected image",
+                            )
+                        }
+                        if(hasVideo) {VideoPlayer(videoUri = imageUri!!)}
+                    }
+
                 Row {
                     Spacer(modifier = Modifier.size(60.dp))
-                    Button(onClick = {}) {
-                        Icon(imageVector = Icons.Default.Done, contentDescription = "Camera Button")
+                    Button(onClick = {
+                        val uri = ComposeFileProvider.getImageUri(context)
+                        imageUri = uri
+                        cameraLauncher.launch(uri)}
+                    ) {
+                        Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera Button")
                         Text("Camara")
                     }
                     Spacer(modifier = Modifier.size(30.dp))
-                    Button(onClick = {}) {
-                        Icon(imageVector = Icons.Default.Done, contentDescription = "Galery Button")
+                    Button(onClick = {imagePicker.launch("image/*")}) {
+                        Icon(imageVector = Icons.Default.Image, contentDescription = "Galery Button")
                         Text("Galeria")
                     }
                 }
@@ -237,13 +306,57 @@ fun canvas(noteChange: (String) -> Unit,
              TextField(value = currentNote,
                  onValueChange =noteChange,
                  modifier = modifier.fillMaxSize())
-
          }
-
-
      }
-
 }
 
 
+// Tomar Fotos
+@Composable
+fun ImagePicker(
+    modifier: Modifier = Modifier,
+) {
+}
 
+
+@Composable
+fun VideoPlayer(videoUri: Uri, modifier: Modifier = Modifier.fillMaxWidth()) {
+    val context = LocalContext.current
+    val exoPlayer = remember {
+        SimpleExoPlayer.Builder(context).build().apply {
+            setMediaItem(MediaItem.fromUri(videoUri))
+            prepare()
+        }
+    }
+    val playbackState = exoPlayer
+    val isPlaying = playbackState?.isPlaying ?: false
+
+    AndroidView(
+        factory = { context ->
+            PlayerView(context).apply {
+                player = exoPlayer
+            }
+        },
+        modifier = modifier
+    )
+
+    IconButton(
+        onClick = {
+            if (isPlaying) {
+                exoPlayer.pause()
+            } else {
+                exoPlayer.play()
+            }
+        },
+        modifier = Modifier
+            //.align(Alignment.BottomEnd)
+            .padding(16.dp)
+    ) {
+        Icon(
+            imageVector = if (isPlaying) Icons.Filled.Refresh else Icons.Filled.PlayArrow,
+            contentDescription = if (isPlaying) "Pause" else "Play",
+            tint = Color.White,
+            modifier = Modifier.size(48.dp)
+        )
+    }
+}
