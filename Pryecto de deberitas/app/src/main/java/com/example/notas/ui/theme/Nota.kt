@@ -176,6 +176,7 @@ fun ScaffoldNotas(navController: NavController,
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
+
     Scaffold(
         topBar = {
             TopAppNotas(naveController = navController)
@@ -255,6 +256,7 @@ fun ScaffoldNotas(navController: NavController,
                     }
                 )
 
+                
                 val context = LocalContext.current
 
                     // 4
