@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 class OfflinesTareasRepository(private val tareasDao: TareasDao):TareasRepository {
     override fun getAllTareaStream(): Flow<List<Tarea>> = tareasDao.getAllTareas()
 
-    override fun getTareaStream(id: Int): Flow<Tarea?> = tareasDao.getTareas(id)
+    override fun getTareaStream(): Flow<Tarea?> = tareasDao.getTareas()
 
     override suspend fun insertTarea(tarea: Tarea) = tareasDao.insert(tarea)
 

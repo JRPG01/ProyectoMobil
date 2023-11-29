@@ -7,9 +7,8 @@ import java.sql.Blob
 
 @Entity(tableName = "notas")
 data class Notas(
-    @PrimaryKey (autoGenerate = true) val id: Int = 0,
+    @PrimaryKey (autoGenerate = true) val id: Int,
     @ColumnInfo (name = "Titulo") val title: String,
     @ColumnInfo (name = "Cuerpo") val body: String,
-    @ColumnInfo (name = "Imagen") val Imag: Blob,
-    @ColumnInfo (name = "Video") val Vid: Blob
+    @ColumnInfo (name = "Imagen") val Imag: String
 )

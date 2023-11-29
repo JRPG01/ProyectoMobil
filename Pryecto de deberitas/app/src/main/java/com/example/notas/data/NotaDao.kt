@@ -16,8 +16,8 @@ interface NotaDao {
     suspend fun update(notas: Notas)
     @Delete
     suspend fun delete(notas: Notas)
-    @Query("SELECT * from notas WHERE id = id")
-    fun getNotas(id: Int): Flow<Notas>
+    @Query("SELECT * from notas")
+    fun getNotas(): Flow<Notas>
     @Query("SELECT * from notas ORDER BY Titulo ASC")
     fun getAllNotas(): Flow<List<Notas>>
 }

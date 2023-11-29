@@ -11,7 +11,5 @@ data class Tarea(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "Titulo") val title: String,
     @ColumnInfo(name = "Cuerpo") val body: String,
-    @ColumnInfo(name = "Imagen") val Imag: Blob,
-    @ColumnInfo(name = "Video") val Vid: Blob,
-    @ColumnInfo(name = "Fecha") val data: Date
+    @ColumnInfo(name = "Imagen") val Imag: String
 )

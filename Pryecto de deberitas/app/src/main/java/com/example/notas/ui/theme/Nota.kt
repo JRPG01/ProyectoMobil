@@ -256,7 +256,7 @@ fun ScaffoldNotas(navController: NavController,
                     }
                 )
 
-                
+                Box{}
                 val context = LocalContext.current
 
                     // 4
