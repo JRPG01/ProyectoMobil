@@ -1,5 +1,6 @@
 package com.example.notas
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.notas.Navegacion.Navegation
+import com.example.notas.alarmas.AlarmSchedulerImpl
+import com.example.notas.alarmas.AlarmasScreen
 import com.example.notas.ui.theme.AndroidAudioPlayer
 import com.example.notas.ui.theme.AndroidAudioRecorder
 import com.example.notas.ui.theme.GrabarAudioScreen

@@ -2,6 +2,7 @@ package com.example.notas.ui.theme
 
 import android.app.DatePickerDialog
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.DatePicker
@@ -65,6 +66,8 @@ import com.example.notas.Navegacion.Screean
 import java.util.Calendar
 import java.util.Date
 import coil.compose.AsyncImage
+import com.example.notas.alarmas.AlarmSchedulerImpl
+import com.example.notas.alarmas.AlarmasScreen
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
@@ -156,9 +159,6 @@ fun TopAppNotas(naveController: NavController,
                                 contentDescription = "Fecha de tarea"
                             )
                         }
-
-
-
                     }
                 )
 
