@@ -3,6 +3,7 @@ package com.example.notas.ui.theme
 import android.app.DatePickerDialog
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,13 +26,12 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.outlined.Camera
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -54,20 +53,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.notas.Navegacion.Screean
-import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 import coil.compose.AsyncImage
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
+import java.io.File
+
 
 class Nota : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -182,6 +181,7 @@ fun ScaffoldNotas(navController: NavController,
             TopAppNotas(naveController = navController)
         },
         bottomBar = {
+
             BottomAppBar(
 
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -221,6 +221,8 @@ fun ScaffoldNotas(navController: NavController,
                 sheetState = sheetState
             ) {
 
+                var uri : Uri? = null
+                // 1
                 var hasImage by remember {
                     mutableStateOf(false)
                 }
@@ -231,6 +233,7 @@ fun ScaffoldNotas(navController: NavController,
                 var imageUri by remember {
                     mutableStateOf<Uri?>(null)
                 }
+
 
                 val imagePicker = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.GetContent(),
@@ -245,6 +248,9 @@ fun ScaffoldNotas(navController: NavController,
                 val cameraLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.TakePicture(),
                     onResult = { success ->
+                        Log.d("IMG", hasImage.toString())
+                        Log.d("URI", imageUri.toString())
+                        if(success) imageUri = uri
                         hasImage = success
                     }
                 )
@@ -259,34 +265,45 @@ fun ScaffoldNotas(navController: NavController,
                 Box{}
                 val context = LocalContext.current
 
-                    // 4
-                    if ((hasImage or hasVideo) && imageUri != null) {
-                        // 5
-                        if(hasImage){
-                            AsyncImage(
-                                model = imageUri,
-                                modifier = Modifier.fillMaxWidth(),
-                                contentDescription = "Selected image",
-                            )
-                        }
-                        if(hasVideo) {VideoPlayer(videoUri = imageUri!!)}
+                if ((hasImage or hasVideo) && imageUri != null) {
+                    // 5
+                    if(hasImage){
+                        AsyncImage(
+                            model = imageUri,
+                            modifier = Modifier.fillMaxWidth(),
+                            contentDescription = "Selected image",
+                        )
                     }
+                    if(hasVideo) {VideoPlayer(videoUri = imageUri!!)}
+                }
+
+                // Experimental
+                //val uri = ComposeFileProvider.getImageUri(applicationContext)
+                // FIn de lo Experimental
 
                 Row {
                     Spacer(modifier = Modifier.size(60.dp))
                     Button(onClick = {
-                        val uri = ComposeFileProvider.getImageUri(context)
-                        imageUri = uri
+                        uri = ComposeFileProvider.getImageUri(context)
                         cameraLauncher.launch(uri)}
                     ) {
                         Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera Button")
-                        Text("Camara")
                     }
                     Spacer(modifier = Modifier.size(30.dp))
                     Button(onClick = {imagePicker.launch("image/*")}) {
                         Icon(imageVector = Icons.Default.Image, contentDescription = "Galery Button")
-                        Text("Galeria")
                     }
+                    Spacer(modifier = Modifier.size(30.dp))
+                    Button(
+                        onClick = {
+                            val uri = ComposeFileProvider.getImageUri(context)
+                            videoLauncher.launch(uri)
+                            imageUri = uri
+                        },
+                    ) {
+                        Icon(imageVector = Icons.Default.Videocam, contentDescription = "Vidio Button")
+                    }
+                    Spacer(modifier = Modifier.size(30.dp))
                 }
                 // Sheet content
                 Spacer(modifier = Modifier.size(50.dp))

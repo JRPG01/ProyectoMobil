@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Notas</string>
+    <string name="record_audio">Permiso para grabar</string>
 </resources>
