@@ -17,6 +17,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AudioFile
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -56,15 +61,10 @@ fun GrabarAudioScreen( onClickStGra: () -> Unit,
         Manifest.permission.RECORD_AUDIO
     )
 
-    //Realiza un seguimiento del estado del diálogo de justificación, necesario cuando el usuario requiere más justificación
     var rationaleState by remember {
         mutableStateOf<RationaleState?>(null)
     }
-    /*val fineLocationPermissionState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-        ),
-    )*/
+
     Box(
         Modifier
             .fillMaxSize()
@@ -85,7 +85,7 @@ fun GrabarAudioScreen( onClickStGra: () -> Unit,
                 onClickStGra,
                 onClickSpGra,
                 onClickStRe,
-                onClickStRe
+                onClickSpRe
             ) {
                 if (recordAudioPermissionState.status.shouldShowRationale) {
                     rationaleState = RationaleState(
@@ -121,24 +121,24 @@ fun PermissionRequestButton(isGranted: Boolean, title: String,
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Outlined.CheckCircle, title, modifier = Modifier.size(48.dp))
             Spacer(Modifier.size(10.dp))
             Text(text = title, modifier = Modifier.background(Color.Transparent))
             Spacer(Modifier.size(10.dp))
 
         }
-        Column {
+        Spacer(modifier = Modifier.size(545.dp))
+        Row {
             Button(onClick = onClickStGra) {
-                Text("Iniciar Grabar")
+                Icon(imageVector = Icons.Default.AudioFile , contentDescription = "Iniciar Audio" )
             }
             Button(onClick = onClickSpGra) {
-                Text("Parar Grabar")
+                Icon(imageVector = Icons.Default.Stop , contentDescription = "Iniciar Audio" )
             }
             Button(onClick = onClickStRe) {
-                Text("Iniciar reproducri")
+                Icon(imageVector = Icons.Default.PlayCircle , contentDescription = "Reproduce Audio" )
             }
             Button(onClick = onClickSpRe) {
-                Text("Parar reproducir")
+                Icon(imageVector = Icons.Default.Pause , contentDescription = "Pause Audio" )
             }
         }
     } else {

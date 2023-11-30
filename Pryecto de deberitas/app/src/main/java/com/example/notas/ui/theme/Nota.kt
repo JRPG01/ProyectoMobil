@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -76,7 +79,9 @@ class Nota : ComponentActivity() {
             NotasTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ScaffoldNotas(navController = rememberNavController())
@@ -91,7 +96,7 @@ class Nota : ComponentActivity() {
 fun TopAppNotas(naveController: NavController,
     modifier: Modifier = Modifier) {
     var name by remember {
-        mutableStateOf("Barra de Busqueda")
+        mutableStateOf("")
     }
     /*calendario*/
     // Fetching the Local Context
@@ -140,6 +145,7 @@ fun TopAppNotas(naveController: NavController,
                 TextField(
                     value = name,
                     onValueChange = {name = it},
+                    label = { Text(text = "Titulo")},
                     modifier = Modifier.fillMaxWidth(),
                     trailingIcon = {
                         IconButton(onClick ={
