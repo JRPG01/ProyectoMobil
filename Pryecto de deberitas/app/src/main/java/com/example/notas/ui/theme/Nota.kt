@@ -66,8 +66,10 @@ import com.example.notas.Navegacion.Screean
 import java.util.Calendar
 import java.util.Date
 import coil.compose.AsyncImage
-import com.example.notas.alarmas.AlarmSchedulerImpl
-import com.example.notas.alarmas.AlarmasScreen
+import com.example.notas.AppViewModelProvider
+import com.example.notas.utils.NAvegationType
+//import com.example.notas.alarmas.AlarmSchedulerImpl
+//import com.example.notas.alarmas.AlarmasScreen
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
@@ -87,7 +89,7 @@ class Nota : ComponentActivity() {
                         .verticalScroll(rememberScrollState()),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ScaffoldNotas(navController = rememberNavController())
+                    //ScaffoldNotas(navController = rememberNavController())
                 }
             }
         }
@@ -384,4 +386,10 @@ fun VideoPlayer(videoUri: Uri, modifier: Modifier = Modifier.fillMaxWidth()) {
             modifier = Modifier.size(48.dp)
         )
     }
+}
+
+@Composable
+fun ContenidoNotas(viewModel: NotesViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController, navigationType:NAvegationType){
+
+
 }
