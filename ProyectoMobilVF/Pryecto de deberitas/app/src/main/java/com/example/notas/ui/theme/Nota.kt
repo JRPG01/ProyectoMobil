@@ -288,7 +288,7 @@ fun ScaffoldNotas(navController: NavController,
                         scope.launch {
                             val db = Room.databaseBuilder(c, NotasDatabase::class.java, "notas_database")
                                     .build()
-                            val g = Notas(0, "sdasda", "dfdf", "dfd",)
+                            val g = Notas(0, noteViewModel.currentSearch, noteViewModel.currentNote, "",)
                             db.NotaDao().insert(g)
                         }
                         //insercion

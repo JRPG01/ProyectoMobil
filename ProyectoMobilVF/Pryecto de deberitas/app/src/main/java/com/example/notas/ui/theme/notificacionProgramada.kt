@@ -11,7 +11,7 @@ import okhttp3.internal.notify
 
 class notificacionProgramada:BroadcastReceiver() {
     companion object{
-        const val NOTIFICACION_ID = 5
+        var NOTIFICACION_ID = 5
     }
     override fun onReceive(context: Context, intent: Intent?) {
         crearNoficacion(context)
