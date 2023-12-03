@@ -126,7 +126,7 @@ fun PermissionRequestButton(isGranted: Boolean, title: String,
             Spacer(Modifier.size(10.dp))
 
         }
-        Spacer(modifier = Modifier.size(545.dp))
+        Spacer(modifier = Modifier.size(595.dp))
         Row {
             Button(onClick = onClickStGra) {
                 Icon(imageVector = Icons.Default.AudioFile , contentDescription = "Iniciar Audio" )

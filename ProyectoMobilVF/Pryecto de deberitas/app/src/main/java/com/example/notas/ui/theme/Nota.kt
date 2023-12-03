@@ -21,6 +21,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,8 +29,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -40,6 +43,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.BottomAppBar
@@ -278,11 +282,7 @@ fun ScaffoldNotas(navController: NavController,
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
                 Row {
-                    Button(onClick = {showBottomSheet = true}) {
-                        Icon(Icons.Default.Add , contentDescription = "Add Imagen")
-                        Text(text = "Img")
-                    }
-                    Spacer(modifier = Modifier.size(22.dp))
+                    Spacer(modifier = Modifier.size(300.dp))
                     Button(onClick = {
                         //insercion
                         scope.launch {
@@ -293,8 +293,7 @@ fun ScaffoldNotas(navController: NavController,
                         }
                         //insercion
                     }) {
-                        Icon(Icons.Default.Done , contentDescription = "Save note")
-                        Text(text = "Guardar")
+                        Icon(Icons.Default.Save , contentDescription = "Save note")
                     }
                 }
             }
@@ -310,104 +309,6 @@ fun ScaffoldNotas(navController: NavController,
                 currentNote = noteViewModel.currentNote,
             )
         }
-
-        // Screen content
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    showBottomSheet = false
-                },
-                sheetState = sheetState
-            ) {
-
-                var uri : Uri? = null
-                // 1
-                var hasImage by remember {
-                    mutableStateOf(false)
-                }
-                var hasVideo by remember {
-                    mutableStateOf(false)
-                }
-                // 2
-                var imageUri by remember {
-                    mutableStateOf<Uri?>(null)
-                }
-
-
-                val imagePicker = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.GetContent(),
-                    onResult = { uri ->
-                        // TODO
-                        // 3
-                        hasImage = uri != null
-                        imageUri = uri
-                    }
-                )
-
-                val cameraLauncher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.TakePicture(),
-                    onResult = { success ->
-                        Log.d("IMG", hasImage.toString())
-                        Log.d("URI", imageUri.toString())
-                        if(success) imageUri = uri
-                        hasImage = success
-                    }
-                )
-
-                val videoLauncher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.CaptureVideo(),
-                    onResult = { success ->
-                        hasVideo = success
-                    }
-                )
-
-                Box{}
-                val context = LocalContext.current
-
-                if ((hasImage or hasVideo) && imageUri != null) {
-                    // 5
-                    if(hasImage){
-                        AsyncImage(
-                            model = imageUri,
-                            modifier = Modifier.fillMaxWidth(),
-                            contentDescription = "Selected image",
-                        )
-                    }
-                    if(hasVideo) {VideoPlayer(videoUri = imageUri!!)}
-                }
-
-                // Experimental
-                //val uri = ComposeFileProvider.getImageUri(applicationContext)
-                // FIn de lo Experimental
-
-                Row {
-                    Spacer(modifier = Modifier.size(60.dp))
-                    Button(onClick = {
-                        uri = ComposeFileProvider.getImageUri(context)
-                        cameraLauncher.launch(uri)}
-                    ) {
-                        Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera Button")
-                    }
-                    Spacer(modifier = Modifier.size(30.dp))
-                    Button(onClick = {imagePicker.launch("image/*")}) {
-                        Icon(imageVector = Icons.Default.Image, contentDescription = "Galery Button")
-                    }
-                    Spacer(modifier = Modifier.size(30.dp))
-                    Button(
-                        onClick = {
-                            val uri = ComposeFileProvider.getImageUri(context)
-                            videoLauncher.launch(uri)
-                            imageUri = uri
-                        },
-                    ) {
-                        Icon(imageVector = Icons.Default.Videocam, contentDescription = "Vidio Button")
-                    }
-                    Spacer(modifier = Modifier.size(30.dp))
-                }
-                // Sheet content
-                Spacer(modifier = Modifier.size(50.dp))
-            }
-        }
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -418,12 +319,104 @@ fun canvas(noteChange: (String) -> Unit,
 
      Scaffold(){innerPadding->
 
+         // VARIABLES DE MULTIMEDIA
+         var uri : Uri? = null
+         // 1
+         var hasImage by remember {
+             mutableStateOf(false)
+         }
+         var hasVideo by remember {
+             mutableStateOf(false)
+         }
+         // 2
+         var imageUri by remember {
+             mutableStateOf<Uri?>(null)
+         }
+         var  listaUri = remember {
+             mutableListOf<Uri?>()
+         }
+
+
+         val imagePicker = rememberLauncherForActivityResult(
+             contract = ActivityResultContracts.GetContent(),
+             onResult = { uri ->
+                 // TODO
+                 // 3
+                 hasImage = uri != null
+                 imageUri = uri
+             }
+         )
+
+         val cameraLauncher = rememberLauncherForActivityResult(
+             contract = ActivityResultContracts.TakePicture(),
+             onResult = { success ->
+                 Log.d("IMG", hasImage.toString())
+                 Log.d("URI", imageUri.toString())
+                 if(success) imageUri = uri
+                 hasImage = success
+             }
+         )
+
+         val videoLauncher = rememberLauncherForActivityResult(
+             contract = ActivityResultContracts.CaptureVideo(),
+             onResult = { success ->
+                 hasVideo = success
+             }
+         )
+         val context = LocalContext.current
+
          Column(modifier = Modifier
              .padding(innerPadding),
              verticalArrangement = Arrangement.spacedBy(16.dp),) {
              TextField(value = currentNote,
                  onValueChange =noteChange,
-                 modifier = modifier.fillMaxSize())
+                 modifier = modifier
+                     .width(380.dp)
+                     .height(150.dp))
+             Spacer(modifier = Modifier.size(20.dp))
+             Row (Modifier.horizontalScroll(rememberScrollState())){
+                 if ((hasImage or hasVideo) && imageUri != null) {
+                     listaUri.add(imageUri)
+                     // 5
+                     for (imagen in listaUri) {
+                         if (hasImage) {
+                             AsyncImage(
+                                 model = imagen,
+                                 modifier = Modifier
+                                     .height(100.dp)
+                                     .width(100.dp),
+                                 contentDescription = "Selected image",
+                             )
+                         }
+                     }
+                     if(hasVideo) {VideoPlayer(videoUri = imageUri!!)}
+                 }
+             }
+             Spacer(modifier = Modifier.size(100.dp))
+             Row {
+                 Spacer(modifier = Modifier.size(60.dp))
+                 Button(onClick = {
+                     uri = ComposeFileProvider.getImageUri(context)
+                     cameraLauncher.launch(uri)}
+                 ) {
+                     Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera Button")
+                 }
+                 Spacer(modifier = Modifier.size(20.dp))
+                 Button(onClick = {imagePicker.launch("image/*")}) {
+                     Icon(imageVector = Icons.Default.Image, contentDescription = "Galery Button")
+                 }
+                 Spacer(modifier = Modifier.size(20.dp))
+                 Button(
+                     onClick = {
+                         val uri = ComposeFileProvider.getImageUri(context)
+                         videoLauncher.launch(uri)
+                         imageUri = uri
+                     },
+                 ) {
+                     Icon(imageVector = Icons.Default.Videocam, contentDescription = "Vidio Button")
+                 }
+                 Spacer(modifier = Modifier.size(20.dp))
+             }
          }
      }
 }
