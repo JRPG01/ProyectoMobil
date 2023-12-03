@@ -120,7 +120,8 @@ class Nota : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppNotas(naveController: NavController,
-    modifier: Modifier = Modifier) {
+                modifier: Modifier = Modifier,
+                noteViewModel: NotesViewModel= viewModel()) {
     var name by remember {
         mutableStateOf("")
     }
@@ -178,8 +179,8 @@ fun TopAppNotas(naveController: NavController,
                     )
                 }
                 TextField(
-                    value = name,
-                    onValueChange = {name = it},
+                    value = noteViewModel.currentTitle,
+                    onValueChange = {noteViewModel.updateTitleNote(it)},
                     label = { Text(text = "Titulo")},
                     modifier = Modifier.fillMaxWidth(),
                     trailingIcon = {
@@ -191,7 +192,6 @@ fun TopAppNotas(naveController: NavController,
                                 "Notificacion de tarea",
                                 "La fecha limite de la tarea finalizado"
                             )
-                            notificaionProgramada(contestonotificaiones)
                         //mDatePickerDialog.show()
                         }, colors = IconButtonDefaults.iconButtonColors(Color(0,0,0, 0)) ){
                             Icon(
@@ -201,7 +201,6 @@ fun TopAppNotas(naveController: NavController,
                         }
                     }
                 )
-
             }
         },
         modifier = modifier.fillMaxWidth()
@@ -234,26 +233,6 @@ fun notificacionBasica(
     }
 }
 
-
-
-@SuppressLint("ScheduleExactAlarm")
-@RequiresApi(Build.VERSION_CODES.S)
-fun notificaionProgramada(mContext: Context) {
-    val intent = Intent(mContext,notificacionProgramada::class.java)
-    val penddingIntent = PendingIntent.getBroadcast(
-        mContext,
-        notificacionProgramada.NOTIFICACION_ID,
-        intent,
-        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-    )
-    var alarmManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    alarmManager.setExact(
-        AlarmManager.RTC_WAKEUP,
-        Calendar.getInstance().timeInMillis+10000,penddingIntent
-    )
-}
-
-
 @RequiresApi(Build.VERSION_CODES.S)
 @ExperimentalMaterial3Api
 @OptIn(ExperimentalMaterial3Api::class)
@@ -264,10 +243,7 @@ fun ScaffoldNotas(navController: NavController,
     val noteUiState by noteViewModel.uiState.collectAsState()
     //variable
     val c = LocalContext.current
-    val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    //variables
-    var showBottomSheet by remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -288,7 +264,7 @@ fun ScaffoldNotas(navController: NavController,
                         scope.launch {
                             val db = Room.databaseBuilder(c, NotasDatabase::class.java, "notas_database")
                                     .build()
-                            val g = Notas(0, noteViewModel.currentSearch, noteViewModel.currentNote, "",)
+                            val g = Notas(0, noteViewModel.currentTitle, noteViewModel.currentNote, "",)
                             db.NotaDao().insert(g)
                         }
                         //insercion

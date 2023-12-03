@@ -117,7 +117,7 @@ fun ScaffoldExample(navController: NavController,
             }
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 120.dp)){
+                .padding(top = 20.dp)){
                     itemsIndexed(listnote){pos, w ->
                         Card(modifier = Modifier
                             .fillMaxWidth()

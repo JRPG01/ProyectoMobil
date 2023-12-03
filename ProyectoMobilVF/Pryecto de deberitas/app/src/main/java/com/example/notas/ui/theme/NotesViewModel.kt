@@ -13,12 +13,17 @@ class NotesViewModel : ViewModel() {
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
     var currentSearch by mutableStateOf("")
         private set
+    var currentTitle by mutableStateOf("")
+        private set
 
     var currentNote by mutableStateOf("")
         private set
 
     fun updateUserGuess(search: String){
          currentSearch = search
+    }
+    fun updateTitleNote(search: String){
+        currentTitle = search
     }
 
     fun updateNote(text: String){
