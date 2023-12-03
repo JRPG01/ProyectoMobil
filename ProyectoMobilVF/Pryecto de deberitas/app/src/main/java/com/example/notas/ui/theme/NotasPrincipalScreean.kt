@@ -117,12 +117,13 @@ fun ScaffoldExample(navController: NavController,
             }
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 20.dp)){
+                .padding(top = 20.dp)
+                .padding(bottom = 90.dp)){
                     itemsIndexed(listnote){pos, w ->
                         Card(modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
-                            .height(50.dp)
+                            .height(100.dp)
                             .clickable { navController.navigate("/${w.id}") }){
                             Text(text ="${w.title}", maxLines = 1, style = MaterialTheme.typography.titleLarge)
                             Text(text ="${w.body}", maxLines = 1, style=MaterialTheme.typography.bodyMedium)
