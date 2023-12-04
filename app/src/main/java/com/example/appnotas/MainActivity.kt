@@ -9,13 +9,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.appnotas.ViewModel.NotasViewModel
 import com.example.appnotas.ui.theme.AppNotasTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val context = LocalContext.current
+            val multiViewModel = NotasViewModel(context)
+            val multiUiState by multiViewModel.uiState.collectAsState()
+
+            val windowSize = calculateWindowSizeClass(activity = this)
             AppNotasTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
