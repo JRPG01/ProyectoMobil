@@ -291,9 +291,11 @@ fun ScaffoldNotas(navController: NavController,
                             val g = Notas(0, noteViewModel.currentSearch, noteViewModel.currentNote, "",)
                             db.NotaDao().insert(g)
                         }
+                        navController.popBackStack()
                         //insercion
                     }) {
                         Icon(Icons.Default.Save , contentDescription = "Save note")
+
                     }
                 }
             }

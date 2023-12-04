@@ -121,9 +121,10 @@ fun ScaffoldExample(navController: NavController,
                     itemsIndexed(listnote){pos, w ->
                         Card(modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .height(50.dp)
-                            .clickable { navController.navigate("/${w.id}") }){
+                            .padding(top=20.dp)
+                            .padding(bottom=90.dp)
+                            .height(100.dp)
+                            .clickable { navController.navigate("notas_editar/${w.id}") }){
                             Text(text ="${w.title}", maxLines = 1, style = MaterialTheme.typography.titleLarge)
                             Text(text ="${w.body}", maxLines = 1, style=MaterialTheme.typography.bodyMedium)
 
