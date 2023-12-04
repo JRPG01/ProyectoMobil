@@ -76,6 +76,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.example.appnotas.Multimedia.ComposeFileProvider
+import com.example.appnotas.Multimedia.saveImageToGallery
+import com.example.appnotas.Multimedia.saveVideoToGallery
 import com.example.appnotas.Room.WorksData
 import com.example.appnotas.ViewModel.NotasViewModel
 import com.example.appnotas.utils.MultiNavigationType
