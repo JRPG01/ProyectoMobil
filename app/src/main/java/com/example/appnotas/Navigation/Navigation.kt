@@ -8,6 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.appnotas.ViewModel.NotasViewModel
 import com.example.appnotas.utils.MultiNavigationType
+import com.example.appnotas.NotaScreen
+import com.example.appnotas.InicioScreen
+import com.example.appnotas.TareaScreen
+import com.example.appnotas.AjusteScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
