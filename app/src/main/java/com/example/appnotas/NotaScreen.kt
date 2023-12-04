@@ -53,6 +53,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,6 +75,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.example.appnotas.Multimedia.AudioPlayer
+import com.example.appnotas.Multimedia.ComposeFileProvider
+import com.example.appnotas.Multimedia.DialogShowAudioSelected
+import com.example.appnotas.Multimedia.DialogShowFileSelected
+import com.example.appnotas.Multimedia.DialogShowImageTake
+import com.example.appnotas.Multimedia.DialogShowVideoTake
+import com.example.appnotas.Multimedia.VideoPlayer
+import com.example.appnotas.Notifications.createChannelNotification
 import com.example.appnotas.Room.NotesData
 import com.example.appnotas.ViewModel.NotasViewModel
 import com.example.appnotas.utils.MultiNavigationType
@@ -478,7 +487,7 @@ fun DialogShowMultimediaNote(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DialogDeleteNote(
-    multiViewModel: MultitaskViewModel,
+    multiViewModel: NotasViewModel,
     msg: AnnotatedString,
     onDismiss: () -> Unit,
     item: NotesData
@@ -534,7 +543,7 @@ fun DialogDeleteNote(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun FABody(
-    multiViewModel: MultitaskViewModel
+    multiViewModel: NotasViewModel
 ) {
     var dialog by remember {
         mutableStateOf(false)
@@ -575,7 +584,7 @@ private fun FABody(
 @Composable
 fun DialogAddNote(
     onClick: () -> Unit,
-    multiViewModel: MultitaskViewModel,
+    multiViewModel: NotasViewModel,
     update: Boolean = false,
     nota: NotesData = NotesData(0,"","", LocalDate.now(), emptyList(), emptyList(), emptyList(), emptyList())
 ) {

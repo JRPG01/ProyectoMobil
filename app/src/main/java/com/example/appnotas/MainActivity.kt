@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
             val multiUiState by multiViewModel.uiState.collectAsState()
 
             val windowSize = calculateWindowSizeClass(activity = this)
-            AppNotasTheme {
+            AppNotasTheme(multiUiState.currentTheme) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

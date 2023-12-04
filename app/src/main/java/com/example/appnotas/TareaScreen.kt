@@ -56,6 +56,7 @@ import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,9 +77,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.example.appnotas.Multimedia.AudioPlayer
 import com.example.appnotas.Multimedia.ComposeFileProvider
+import com.example.appnotas.Multimedia.DialogShowAudioSelected
+import com.example.appnotas.Multimedia.DialogShowFileSelected
+import com.example.appnotas.Multimedia.DialogShowImageTake
+import com.example.appnotas.Multimedia.DialogShowVideoTake
+import com.example.appnotas.Multimedia.VideoPlayer
 import com.example.appnotas.Multimedia.saveImageToGallery
 import com.example.appnotas.Multimedia.saveVideoToGallery
+import com.example.appnotas.Notifications.createChannelNotification
+import com.example.appnotas.Notifications.workAlarm
 import com.example.appnotas.Room.WorksData
 import com.example.appnotas.ViewModel.NotasViewModel
 import com.example.appnotas.utils.MultiNavigationType
@@ -89,7 +98,7 @@ import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TareaScreen(multiViewModel: MultitaskViewModel, navigationType: MultiNavigationType) {
+fun TareaScreen(multiViewModel: NotasViewModel, navigationType: MultiNavigationType) {
     val multiUiState by multiViewModel.uiState.collectAsState()
 
     val tareasItems = multiUiState.works
