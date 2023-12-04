@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
@@ -24,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -85,6 +88,7 @@ fun TopAppBarExample(searchChanged: (String) -> Unit,
 fun ScaffoldExample(navController: NavController,
                     noteViewModel: NotesViewModel= viewModel()
 ) {
+    var eliminarConfirmaciónrequerida by rememberSaveable { mutableStateOf(false) }
     val noteUiState by noteViewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
 
@@ -128,7 +132,7 @@ fun ScaffoldExample(navController: NavController,
                             Text(text ="${w.title}", maxLines = 1, style = MaterialTheme.typography.titleLarge)
                             Text(text ="${w.body}", maxLines = 1, style=MaterialTheme.typography.bodyMedium)
 
-                            IconButton(modifier = Modifier.padding(100.dp),onClick = {}) {
+                            IconButton(modifier = Modifier,onClick = {}) {
                                 Icon(painter= painterResource(id= R.drawable.baseline_delete), contentDescription = "Borrar",tint= MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
@@ -140,5 +144,26 @@ fun ScaffoldExample(navController: NavController,
             //carga de la lista
         }
     }
+
+
+@Composable
+fun Confirmacion(
+confirmarEliminacion: () -> Unit,
+cancelarEliminacion: () -> Unit) {
+    AlertDialog(onDismissRequest = {  },
+        title = { Text("Confirmar eliminación") },
+        text = { Text("¿Estás seguro de que deseas eliminar esta nota?") },
+        modifier = Modifier.padding(16.dp),
+        dismissButton = {
+            TextButton(onClick = cancelarEliminacion  ) {
+                Text(text = "Cancelar")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = confirmarEliminacion ) {
+                Text(text = "Si, eliminar")
+            }
+        })
+}
 
 
