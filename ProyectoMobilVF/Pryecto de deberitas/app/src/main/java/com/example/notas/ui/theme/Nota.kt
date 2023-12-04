@@ -1,14 +1,10 @@
 package com.example.notas.ui.theme
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -20,10 +16,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,13 +27,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
@@ -253,25 +247,53 @@ fun ScaffoldNotas(navController: NavController,
         bottomBar = {
 
             BottomAppBar(
-
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
-                Row {
-                    Spacer(modifier = Modifier.size(300.dp))
-                    Button(onClick = {
-                        //insercion
-                        scope.launch {
-                            val db = Room.databaseBuilder(c, NotasDatabase::class.java, "notas_database")
-                                    .build()
-                            val g = Notas(0, noteViewModel.currentTitle, noteViewModel.currentNote, "",)
-                            db.NotaDao().insert(g)
+                LazyColumn(modifier = Modifier){
+                    item {
+                        // AUDIO
+                        val contextAudio = LocalContext.current
+                        val recorder by lazy {
+                            AndroidAudioRecorder(contextAudio)
                         }
-                        //insercion
-                    }) {
-                        Icon(Icons.Default.Save , contentDescription = "Save note")
+
+                        val player by lazy {
+                            AndroidAudioPlayer(contextAudio)
+                        }
+
+                        var audioFile: File? = null
+
+                        GrabarAudioScreen(
+                            onClickStGra = {
+                                File(contextAudio.cacheDir, "audio.mp3").also {
+                                    recorder.start(it)
+                                    audioFile = it
+                                }
+                            },
+                            onClickSpGra = { recorder.stop() },
+                            onClickStRe = { audioFile?.let { player.start(it) } },
+                            onClickSpRe = { player.stop() }
+                        )
                     }
+                    item{
+                        //Spacer(modifier = Modifier.size(0.dp))
+                        Button(onClick = {
+                            //insercion
+                            scope.launch {
+                                val db = Room.databaseBuilder(c, NotasDatabase::class.java, "notas_database")
+                                    .build()
+                                val g = Notas(0, noteViewModel.currentTitle, noteViewModel.currentNote, "",)
+                                db.NotaDao().insert(g)
+                            }
+                            //insercion
+                        }) {
+                            Icon(Icons.Default.Save , contentDescription = "Save note")
+                        }
+                    }
+
                 }
+
             }
         }
     ) { innerPadding ->

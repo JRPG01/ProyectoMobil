@@ -16,12 +16,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.notas.Navegacion.Navegation
 import com.example.notas.ui.theme.AndroidAudioPlayer
 import com.example.notas.ui.theme.AndroidAudioRecorder
-import com.example.notas.ui.theme.GrabarAudioScreen
 import com.example.notas.ui.theme.NotasTheme
 import java.io.File
 
 class MainActivity : ComponentActivity() {
-    private val recorder by lazy {
+    /*private val recorder by lazy {
         AndroidAudioRecorder(applicationContext)
     }
 
@@ -29,7 +28,7 @@ class MainActivity : ComponentActivity() {
         AndroidAudioPlayer(applicationContext)
     }
 
-    private var audioFile: File? = null
+    private var audioFile: File? = null*/
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Navegation(navHostController = rememberNavController())
-                    GrabarAudioScreen(
+                    /*GrabarAudioScreen(
                         onClickStGra = {
                             File(cacheDir, "audio.mp3").also {
                                 recorder.start(it)
@@ -53,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         onClickSpGra = {recorder.stop()},
                         onClickStRe = { audioFile?.let { player.start(it) } },
                         onClickSpRe = {player.stop()}
-                    )
+                    )*/
                 }
             }
         }

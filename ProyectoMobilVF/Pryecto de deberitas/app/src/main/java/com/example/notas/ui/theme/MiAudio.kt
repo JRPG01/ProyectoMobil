@@ -67,8 +67,7 @@ fun GrabarAudioScreen( onClickStGra: () -> Unit,
 
     Box(
         Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
     ) {
         Column(
             modifier = Modifier
@@ -117,16 +116,15 @@ fun PermissionRequestButton(isGranted: Boolean, title: String,
     if (isGranted) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(Modifier.size(10.dp))
+            //Spacer(Modifier.size(10.dp))
             Text(text = title, modifier = Modifier.background(Color.Transparent))
-            Spacer(Modifier.size(10.dp))
+            //Spacer(Modifier.size(10.dp))
 
         }
-        Spacer(modifier = Modifier.size(595.dp))
+        //Spacer(modifier = Modifier.size(595.dp))
         Row {
             Button(onClick = onClickStGra) {
                 Icon(imageVector = Icons.Default.AudioFile , contentDescription = "Iniciar Audio" )
