@@ -100,10 +100,15 @@ fun NotaScreen(
     multiViewModel: NotasViewModel,
     navigationType: MultiNavigationType
 ) {
-    val scope = rememberCoroutineScope()
+    /* val scope = rememberCoroutineScope()
     val snackbarHost = remember {
-        SnackbarHostState()
+        SnackbarHostState() */
+    var preview by remember {
+        mutableStateOf(
+            NotesData(-1,"Preview titulo","Esta es la descripcion general de todo.", LocalDate.now(), emptyList(), emptyList(), emptyList(), emptyList())
+        )
     }
+
 
     val multiUiState by multiViewModel.uiState.collectAsState()
 
@@ -127,7 +132,9 @@ fun NotaScreen(
                     ){
                         items(notas_items.size){ index ->
                             val item = notas_items[index]
-                            NotaBody(item,multiViewModel)
+                           // NotaBody(item,multiViewModel)
+                            NotaBody(item, multiViewModel,navigationType) { item -> preview = item
+                            }
                         }
                     }
                 } else {
@@ -155,11 +162,12 @@ fun NotaScreen(
 
         // visualizacion previa
         if(navigationType == MultiNavigationType.NAVIGATION_RAIL){
-            MultiDetailsScreen(
-                title = "Titulo nota",
-                date = "Fecha nota",
-                desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-            )
+            MultiDetailsScreenNotes(
+                preview,
+                multiViewModel
+            ) { item ->
+                preview = item
+            }
         }
     }
 }
@@ -179,7 +187,9 @@ private fun TopBar() {
 @Composable
 fun NotaBody(
     item: NotesData,
-    multiViewModel: NotasViewModel
+    multiViewModel: NotasViewModel,
+    navigationType: MultiNavigationType,
+    changePreview: (NotesData) -> Unit
 ) {
 
     // mensaje
@@ -218,7 +228,10 @@ fun NotaBody(
             item = item,
             msg = msg,
             multiViewModel = multiViewModel
-        )
+        ){
+                item ->
+            changePreview(item)
+        }
     }
 
     if(showMultimedia){
@@ -233,10 +246,18 @@ fun NotaBody(
             .padding(vertical = 4.dp, horizontal = 16.dp)
             .combinedClickable(
                 onClick = {
-                    openDialog = !openDialog
+                    if (navigationType == MultiNavigationType.NAVIGATION_RAIL) {
+                        changePreview(item)
+                    } else {
+                        openDialog = !openDialog
+                    }
                 },
                 onLongClick = {
-                    eliminar = !eliminar
+                    if (navigationType == MultiNavigationType.NAVIGATION_RAIL) {
+                        changePreview(item)
+                    } else {
+                        eliminar = !eliminar
+                    }
                 },
                 onDoubleClick = {
                     showMultimedia = !showMultimedia
@@ -472,8 +493,12 @@ fun DialogShowMultimediaNote(
                                     .clickable {
                                         uri = item
                                         val intent = Intent(Intent.ACTION_VIEW).apply {
-                                            setDataAndType(uri, "application/pdf") // Cambia el tipo de MIME según el tipo de documento que estás mostrando
-                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            setDataAndType(
+                                                uri,
+                                                "application/pdf"
+                                            ) // Cambia el tipo de MIME según el tipo de documento que estás mostrando
+                                            flags =
+                                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                         }
                                         context.startActivity(intent)
                                     },
@@ -495,7 +520,8 @@ fun DialogDeleteNote(
     multiViewModel: NotasViewModel,
     msg: AnnotatedString,
     onDismiss: () -> Unit,
-    item: NotesData
+    item: NotesData,
+    changePreview: (NotesData) -> Unit
 ) {
     Dialog(
         onDismissRequest = { onDismiss() }
@@ -515,6 +541,7 @@ fun DialogDeleteNote(
                 Button(
                     onClick = {
                         // eliminar
+                        changePreview(NotesData(-1,"Preview titulo","Descripcion general", LocalDate.now(), emptyList(), emptyList(), emptyList(), emptyList()))
                         multiViewModel.deleteNote(item)
                         onDismiss()
                     },
