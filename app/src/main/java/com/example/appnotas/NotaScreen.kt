@@ -646,7 +646,7 @@ fun DialogAddNote(
         mutableStateOf<Uri?>(null)
     }
     var listImageUri by remember {
-        mutableStateOf(listOf<Uri>())
+        mutableStateOf(if(update) nota.images else listOf<Uri>())
     }
     var showImage by remember {
         mutableStateOf(false)
@@ -679,7 +679,7 @@ fun DialogAddNote(
         mutableStateOf<Uri?>(null)
     }
     var listVideoUri by remember {
-        mutableStateOf(listOf<Uri>())
+        mutableStateOf(if(update) nota.videos else listOf<Uri>())
     }
     var showVideo by remember {
         mutableStateOf(false)
@@ -710,7 +710,7 @@ fun DialogAddNote(
         mutableStateOf<Uri?>(null)
     }
     var listAudioUri by remember {
-        mutableStateOf(listOf<Uri>())
+        mutableStateOf(if(update) nota.audios else listOf<Uri>())
     }
     var showAudio by remember {
         mutableStateOf(false)
@@ -740,7 +740,7 @@ fun DialogAddNote(
         mutableStateOf<Uri?>(null)
     }
     var listFileUri by remember {
-        mutableStateOf(listOf<Uri>())
+        mutableStateOf(if(update) nota.files else listOf<Uri>())
     }
     var showFile by remember {
         mutableStateOf(false)
@@ -1011,7 +1011,8 @@ fun DialogAddNote(
                                     audios = listAudioUri,
                                     files = listFileUri
                                 )
-                                if(title != nota.titlenote || desc != nota.descnote){
+                                if(title != nota.titlenote || desc != nota.descnote || listImageUri != nota.images
+                                    || listVideoUri != nota.videos || listAudioUri != nota.audios || listFileUri != nota.files){
                                     multiViewModel.updateNote(item)
                                 }
                             }

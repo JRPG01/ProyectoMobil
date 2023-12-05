@@ -740,7 +740,7 @@ fun DialogAddWork(
         mutableStateOf<Uri?>(null)
     }
     var listImageUri by remember {
-        mutableStateOf(listOf<Uri>())
+        mutableStateOf(if(update) tarea.images else listOf<Uri>())
     }
     var showImage by remember {
         mutableStateOf(false)
@@ -773,7 +773,7 @@ fun DialogAddWork(
         mutableStateOf<Uri?>(null)
     }
     var listVideoUri by remember {
-        mutableStateOf(listOf<Uri>())
+        mutableStateOf(if(update) tarea.videos else listOf<Uri>())
     }
     var showVideo by remember {
         mutableStateOf(false)
@@ -804,7 +804,7 @@ fun DialogAddWork(
         mutableStateOf<Uri?>(null)
     }
     var listAudioUri by remember {
-        mutableStateOf(listOf<Uri>())
+        mutableStateOf(if(update) tarea.audios else listOf<Uri>())
     }
     var showAudio by remember {
         mutableStateOf(false)
@@ -834,7 +834,7 @@ fun DialogAddWork(
         mutableStateOf<Uri?>(null)
     }
     var listFileUri by remember {
-        mutableStateOf(listOf<Uri>())
+        mutableStateOf(if(update) tarea.files else listOf<Uri>())
     }
     var showFile by remember {
         mutableStateOf(false)
@@ -1130,13 +1130,6 @@ fun DialogAddWork(
                                     )
 
                                     // generar la alarma para la tarea en 5 segundos
-                                    /*workAlarm(
-                                        context = context,
-                                        title = item.titlework,
-                                        longDesc = item.descwork,
-                                        expiration = item.hour,
-                                        time = 5000
-                                    )*/
 
                                     // generar alarma para 5 minutos antes de que caduque la tarea
                                     workAlarm(
@@ -1159,7 +1152,8 @@ fun DialogAddWork(
                                         audios = listAudioUri,
                                         files = listFileUri
                                     )
-                                    if(title != tarea.titlework || desc != tarea.descwork || hourSelected != tarea.hour || date != tarea.datework){
+                                    if(title != tarea.titlework || desc != tarea.descwork || hourSelected != tarea.hour || date != tarea.datework
+                                        || listImageUri != tarea.images || listVideoUri != tarea.videos || listAudioUri != tarea.audios || listFileUri != tarea.files){
                                         multiViewModel.updateWork(item)
                                     }
                                 }
@@ -1343,13 +1337,6 @@ fun DialogAddWork(
                                     )
 
                                     // generar la alarma para la tarea en 5 segundos
-                                    /*workAlarm(
-                                        context = context,
-                                        title = item.titlework,
-                                        longDesc = item.descwork,
-                                        expiration = item.hour,
-                                        time = 5000
-                                    )*/
 
                                     // generar alarma para 5 minutos antes de que caduque la tarea
                                     workAlarm(
