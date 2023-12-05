@@ -8,7 +8,7 @@ import android.os.Build
 fun createChannelNotification(idCanal: String, context: Context) {
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
         val nombre = "Tareas"
-        val descripcion = "Canal de notificaciones de tareas"
+        val descripcion = "Notificaciones de tareas"
         val importancia = NotificationManager.IMPORTANCE_DEFAULT
         val canal = NotificationChannel(idCanal, nombre, importancia)
             .apply {

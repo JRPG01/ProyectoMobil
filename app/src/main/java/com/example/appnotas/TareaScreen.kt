@@ -28,8 +28,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Add
@@ -51,6 +53,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -302,7 +306,8 @@ private fun TareaBody(
     if(showMultimedia){
         DialogShowMultimediaWork(
             onDismiss = { showMultimedia = !showMultimedia },
-            item = item
+            item = item,
+            navigationType = navigationType
         )
     }
 
@@ -382,7 +387,8 @@ private fun TareaBody(
 @Composable
 fun DialogShowMultimediaWork(
     onDismiss: () -> Unit,
-    item: WorksData
+    item: WorksData,
+    navigationType: MultiNavigationType
 ) {
     val context = LocalContext.current
     var uri: Uri by remember { mutableStateOf(Uri.EMPTY) }
@@ -436,6 +442,18 @@ fun DialogShowMultimediaWork(
             }
         }
     }
+    val modifier =
+        if(navigationType == MultiNavigationType.BOTTOM_NAVIGATION){
+            Modifier
+                .padding(PaddingValues(16.dp))
+                .fillMaxWidth(0.8f)
+        } else {
+            Modifier
+                .padding(PaddingValues(16.dp))
+                .fillMaxWidth(0.6f)
+                .fillMaxHeight(0.8f)
+                .verticalScroll(rememberScrollState())
+        }
 
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -836,300 +854,598 @@ fun DialogAddTarea(
                 .fillMaxSize()
         ) {
 
-            Spacer(modifier = Modifier.size(8.dp))
+            if(navigationType == MultiNavigationType.BOTTOM_NAVIGATION){
+                Spacer(modifier = Modifier.size(8.dp))
 
-            // icono para cerrar el dialog
-            Row(
-                modifier = Modifier
-                    .padding(PaddingValues(8.dp)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = {
-                        onClick()
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Clear,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(50.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                TextButton(
-                    onClick = { datePicker.show() },
-                ) {
-                    Text(
-                        text = date.format(DateTimeFormatter.ofPattern("dd-MMM")),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(modifier = Modifier.size(16.dp))
-
-                TextButton(
-                    onClick = { hour = !hour },
-                ) {
-                    Text(
-                        text = hourSelected.format(DateTimeFormatter.ofPattern("HH:mm")),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(modifier = Modifier.size(16.dp))
-            }
-
-            // caja de texto titlo de la nota
-            Row(
-                modifier = Modifier
-                    .padding(PaddingValues(16.dp))
-            ) {
-
-                OutlinedTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    placeholder = {
-                        Text(
-                            text = stringResource(id = R.string.title_tareas),
-                            style = MaterialTheme.typography.headlineSmall
-                        )
-                    },
-                    textStyle = MaterialTheme.typography.headlineSmall,
-                    shape = RoundedCornerShape(0.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next
-                    ),
+                // icono para cerrar el dialog
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                )
-            }
-
-            // caja de texto de la descripcion de la nota
-
-            Column(
-                modifier = Modifier
-                    .padding(PaddingValues(16.dp))
-            ) {
-                OutlinedTextField(
-                    value = desc,
-                    onValueChange = { desc = it },
-                    placeholder = {
-                        Text(
-                            text = stringResource(id = R.string.title_tareas),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    },
-                    textStyle = MaterialTheme.typography.titleMedium,
-                    shape = RoundedCornerShape(0.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.9f)
-                )
-            }
-
-            // boton agregar nota
-            // boton agregar voz, video y audio
-            var documentos by remember {
-                mutableStateOf(false)
-            }
-
-            Row(
-                modifier = Modifier
-                    .padding(
-                        vertical = 0.dp,
-                        horizontal = 16.dp
-                    )
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            ) {
-                // archivos
-                if(documentos){
-
-                    // documentos
-                    IconButton(
-                        onClick = {
-                            filePickerLauncher.launch("application/pdf")
-                        },
-                        modifier = Modifier
-                            .width(75.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
-                            Text(
-                                text = "PDF",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
-
-                    IconButton(
-                        onClick = {
-                            audioPickerLauncher.launch("audio/*")
-                        },
-                        modifier = Modifier
-                            .width(75.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(imageVector = Icons.Outlined.VolumeUp, contentDescription = null)
-                            Text(
-                                text = "Audio",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
-
-                    IconButton(
-                        onClick = {
-                            uri = ComposeFileProvider.getImageUri(context)
-                            videoLauncher.launch(uri)
-                        },
-                        modifier = Modifier
-                            .width(75.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(imageVector = Icons.Outlined.VideoLibrary, contentDescription = null)
-                            Text(
-                                text = "Video",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
-
-                    IconButton(
-                        onClick = {
-                            uri = ComposeFileProvider.getImageUri(context)
-                            cameraLauncher.launch(uri)
-                        },
-                        modifier = Modifier
-                            .width(75.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(imageVector = Icons.Outlined.AccountBox, contentDescription = null)
-                            Text(
-                                text = "Foto",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
-                }
-
-                // abrir archivos
-                IconButton(
-                    onClick = { documentos = !documentos },
-                    modifier = Modifier
-                        .width(75.dp)
+                        .padding(PaddingValues(8.dp)),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    IconButton(
+                        onClick = {
+                            onClick()
+                        }
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.PhotoLibrary,
-                            contentDescription = null
+                            imageVector = Icons.Outlined.Clear,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(50.dp)
                         )
-                        /*Text(
-                            text = "Galeria",
-                            style = MaterialTheme.typography.bodySmall
-                        )*/
                     }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    TextButton(
+                        onClick = { datePicker.show() },
+                    ) {
+                        Text(
+                            text = date.format(DateTimeFormatter.ofPattern("dd-MMM")),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.size(16.dp))
+
+                    TextButton(
+                        onClick = { hour = !hour },
+                    ) {
+                        Text(
+                            text = hourSelected.format(DateTimeFormatter.ofPattern("HH:mm")),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.size(16.dp))
                 }
 
-                Spacer(modifier = Modifier.size(16.dp))
+                // caja de texto titlo de la nota
+                Row(
+                    modifier = Modifier
+                        .padding(PaddingValues(16.dp))
+                ) {
 
-                // guardar tarea
-                if(!documentos){
-                    IconButton(
-                        onClick = {
-                            if(!update){
-                                // guardar las imagenes tomadas en la galeria
-                                listImageUri.forEachIndexed { _, uri ->
-                                    saveImageToGallery(
-                                        uri,
-                                        context,
-                                        "image_${title}-${LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"))}"
-                                    )
-                                }
-                                listVideoUri.forEachIndexed { _, uri ->
-                                    saveVideoToGallery(
-                                        uri,
-                                        context,
-                                        "video_${title}-${LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"))}"
-                                    )
-                                }
-
-                                // crear el item para guardar la tarea
-                                val item = WorksData(
-                                    id = 0,
-                                    titlework = title,
-                                    descwork = desc,
-                                    datework = date,
-                                    hour = hourSelected,
-                                    images = listImageUri,
-                                    videos = listVideoUri,
-                                    audios = listAudioUri,
-                                    files = listFileUri
-                                )
-
-                                // generar la alarma para la tarea
-
-
-                                // agregar tarea a la base de datos
-                                multiViewModel.addWork(item)
-                            } else {
-                                val item = WorksData(
-                                    id = tarea.id,
-                                    titlework = title,
-                                    descwork = desc,
-                                    datework = date,
-                                    hour = hourSelected,
-                                    images = listImageUri,
-                                    videos = listVideoUri,
-                                    audios = listAudioUri,
-                                    files = listFileUri
-                                )
-                                if(title != tarea.titlework || desc != tarea.descwork || hourSelected != tarea.hour || date != tarea.datework){
-                                    multiViewModel.updateWork(item)
-
-                                }
-                            }
-                            onClick()
+                    OutlinedTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.title_tareas),
+                                style = MaterialTheme.typography.headlineSmall
+                            )
                         },
+                        textStyle = MaterialTheme.typography.headlineSmall,
+                        shape = RoundedCornerShape(0.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = colorScheme.surfaceVariant,
+                            unfocusedBorderColor = colorScheme.surfaceVariant,
+                        ),
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+
+                // caja de texto de la descripcion de la nota
+
+                Column(
+                    modifier = Modifier
+                        .padding(PaddingValues(16.dp))
+                ) {
+                    OutlinedTextField(
+                        value = desc,
+                        onValueChange = { desc = it },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.title_tareas),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        },
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        shape = RoundedCornerShape(0.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = colorScheme.surfaceVariant,
+                            unfocusedBorderColor = colorScheme.surfaceVariant,
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.9f)
+                    )
+                }
+
+                // boton agregar nota
+                // boton agregar voz, video y audio
+                var documentos by remember {
+                    mutableStateOf(false)
+                }
+
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            vertical = 0.dp,
+                            horizontal = 16.dp
+                        )
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    // archivos
+                    if(documentos){
+
+                        // documentos
+                        IconButton(
+                            onClick = {
+                                filePickerLauncher.launch("application/pdf")
+                            },
+                            modifier = Modifier
+                                .width(75.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
+                                Text(
+                                    text = "PDF",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+
+                        IconButton(
+                            onClick = {
+                                audioPickerLauncher.launch("audio/*")
+                            },
+                            modifier = Modifier
+                                .width(75.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(imageVector = Icons.Outlined.VolumeUp, contentDescription = null)
+                                Text(
+                                    text = "Audio",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+
+                        IconButton(
+                            onClick = {
+                                uri = ComposeFileProvider.getImageUri(context)
+                                videoLauncher.launch(uri)
+                            },
+                            modifier = Modifier
+                                .width(75.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(imageVector = Icons.Outlined.VideoLibrary, contentDescription = null)
+                                Text(
+                                    text = "Video",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+
+                        IconButton(
+                            onClick = {
+                                uri = ComposeFileProvider.getImageUri(context)
+                                cameraLauncher.launch(uri)
+                            },
+                            modifier = Modifier
+                                .width(75.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(imageVector = Icons.Outlined.AccountBox, contentDescription = null)
+                                Text(
+                                    text = "Foto",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                    }
+
+                    // abrir archivos
+                    IconButton(
+                        onClick = { documentos = !documentos },
                         modifier = Modifier
                             .width(75.dp)
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(imageVector = Icons.Outlined.Check, contentDescription = null)
-                         /*   Text(
-                                text = "Guardar",
-                                style = MaterialTheme.typography.bodySmall
-                            )*/
+                            Icon(
+                                imageVector = Icons.Outlined.PhotoLibrary,
+                                contentDescription = null
+                            )
+
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.size(16.dp))
+
+                    // guardar tarea
+                    if(!documentos){
+                        IconButton(
+                            onClick = {
+                                if(!update){
+                                    // guardar las imagenes tomadas en la galeria
+                                    listImageUri.forEachIndexed { _, uri ->
+                                        saveImageToGallery(
+                                            uri,
+                                            context,
+                                            "image_${title}-${LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"))}"
+                                        )
+                                    }
+                                    listVideoUri.forEachIndexed { _, uri ->
+                                        saveVideoToGallery(
+                                            uri,
+                                            context,
+                                            "video_${title}-${LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"))}"
+                                        )
+                                    }
+
+                                    // crear el item para guardar la tarea
+                                    val item = WorksData(
+                                        id = 0,
+                                        titlework = title,
+                                        descwork = desc,
+                                        datework = date,
+                                        hour = hourSelected,
+                                        images = listImageUri,
+                                        videos = listVideoUri,
+                                        audios = listAudioUri,
+                                        files = listFileUri
+                                    )
+
+                                    workAlarm(
+                                        context = context,
+                                        item = item,
+                                        expiration = item.hour
+                                    )
+
+                                    // agregar tarea a la base de datos
+                                    multiViewModel.addWork(item)
+                                } else {
+                                    val item = WorksData(
+                                        id = tarea.id,
+                                        titlework = title,
+                                        descwork = desc,
+                                        datework = date,
+                                        hour = hourSelected,
+                                        images = listImageUri,
+                                        videos = listVideoUri,
+                                        audios = listAudioUri,
+                                        files = listFileUri
+                                    )
+                                    if(title != tarea.titlework || desc != tarea.descwork || hourSelected != tarea.hour || date != tarea.datework){
+                                        multiViewModel.updateWork(item)
+                                    }
+                                }
+                                onClick()
+                            },
+                            modifier = Modifier
+                                .width(75.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(imageVector = Icons.Outlined.Check, contentDescription = null)
+
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                Row {
+                    Spacer(modifier = Modifier.size(8.dp))
+
+                    // icono para cerrar el dialog
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(0.85f)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(PaddingValues(8.dp)),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    onClick()
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Clear,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            TextButton(
+                                onClick = { datePicker.show() },
+                            ) {
+                                Text(
+                                    text = date.format(DateTimeFormatter.ofPattern("dd-MMM")),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.size(16.dp))
+
+                            TextButton(
+                                onClick = { hour = !hour },
+                            ) {
+                                Text(
+                                    text = hourSelected.format(DateTimeFormatter.ofPattern("HH:mm")),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.size(16.dp))
+                        }
+
+                        // caja de texto titlo de la nota
+                        Row(
+                            modifier = Modifier
+                                .padding(PaddingValues(16.dp))
+                        ) {
+
+                            OutlinedTextField(
+                                value = title,
+                                onValueChange = { title = it },
+                                placeholder = {
+                                    Text(
+                                        text = stringResource(id = R.string.title_tareas),
+                                        style = MaterialTheme.typography.headlineSmall
+                                    )
+                                },
+                                textStyle = MaterialTheme.typography.headlineSmall,
+                                shape = RoundedCornerShape(0.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = colorScheme.surfaceVariant,
+                                    unfocusedBorderColor = colorScheme.surfaceVariant,
+                                ),
+                                maxLines = 1,
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Next
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            )
+                        }
+
+                        // caja de texto de la descripcion de la nota
+
+                        Column(
+                            modifier = Modifier
+                                .padding(PaddingValues(16.dp))
+                        ) {
+                            OutlinedTextField(
+                                value = desc,
+                                onValueChange = { desc = it },
+                                placeholder = {
+                                    Text(
+                                        text = stringResource(id = R.string.title_tareas),
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                },
+                                textStyle = MaterialTheme.typography.titleMedium,
+                                shape = RoundedCornerShape(0.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = colorScheme.surfaceVariant,
+                                    unfocusedBorderColor = colorScheme.surfaceVariant,
+                                ),
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Done
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight(0.9f)
+                            )
+                        }
+                    }
+
+                    // boton agregar nota
+                    // boton agregar voz, video y audio
+                    var documentos by remember {
+                        mutableStateOf(false)
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(modifier = Modifier.size(16.dp))
+
+                        IconButton(
+                            onClick = {
+                                if(!update){
+                                    // guardar las imagenes tomadas en la galeria
+                                    listImageUri.forEachIndexed { _, uri ->
+                                        saveImageToGallery(
+                                            uri,
+                                            context,
+                                            "image_${title}-${LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"))}"
+                                        )
+                                    }
+                                    listVideoUri.forEachIndexed { _, uri ->
+                                        saveVideoToGallery(
+                                            uri,
+                                            context,
+                                            "video_${title}-${LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"))}"
+                                        )
+                                    }
+
+                                    // crear el item para guardar la tarea
+                                    val item = WorksData(
+                                        id = 0,
+                                        titlework = title,
+                                        descwork = desc,
+                                        datework = date,
+                                        hour = hourSelected,
+                                        images = listImageUri,
+                                        videos = listVideoUri,
+                                        audios = listAudioUri,
+                                        files = listFileUri
+                                    )
+
+
+                                    // generar alarma para 5 minutos antes de que caduque la tarea
+                                    workAlarm(
+                                        context = context,
+                                        item = item,
+                                        expiration = item.hour
+                                    )
+
+                                    // agregar tarea a la base de datos
+                                    multiViewModel.addWork(item)
+                                } else {
+                                    val item = WorksData(
+                                        id = tarea.id,
+                                        titlework = title,
+                                        descwork = desc,
+                                        datework = date,
+                                        hour = hourSelected,
+                                        images = listImageUri,
+                                        videos = listVideoUri,
+                                        audios = listAudioUri,
+                                        files = listFileUri
+                                    )
+                                    if(title != tarea.titlework || desc != tarea.descwork || hourSelected != tarea.hour || date != tarea.datework){
+                                        multiViewModel.updateWork(item)
+                                    }
+                                }
+                                onClick()
+                            },
+                            modifier = Modifier
+                                .width(75.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(imageVector = Icons.Outlined.Check, contentDescription = null)
+
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.size(16.dp))
+
+                        // abrir archivos
+                        IconButton(
+                            onClick = { documentos = !documentos },
+                            modifier = Modifier
+                                .width(75.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.PhotoLibrary,
+                                    contentDescription = null
+                                )
+
+                            }
+                        }
+
+                        // archivos
+                        if(documentos){
+
+                            // documentos
+                            IconButton(
+                                onClick = {
+                                    filePickerLauncher.launch("application/pdf")
+                                },
+                                modifier = Modifier
+                                    .width(75.dp)
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
+                                    Text(
+                                        text = "PDF",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    audioPickerLauncher.launch("audio/*")
+                                },
+                                modifier = Modifier
+                                    .width(75.dp)
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(imageVector = Icons.Outlined.VolumeUp, contentDescription = null)
+                                    Text(
+                                        text = "Audio",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    uri = ComposeFileProvider.getImageUri(context)
+                                    videoLauncher.launch(uri)
+                                },
+                                modifier = Modifier
+                                    .width(75.dp)
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(imageVector = Icons.Outlined.VideoLibrary, contentDescription = null)
+                                    Text(
+                                        text = "Video",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    uri = ComposeFileProvider.getImageUri(context)
+                                    cameraLauncher.launch(uri)
+                                },
+                                modifier = Modifier
+                                    .width(75.dp)
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(imageVector = Icons.Outlined.AccountBox, contentDescription = null)
+                                    Text(
+                                        text = "Foto",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -1138,7 +1454,7 @@ fun DialogAddTarea(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DialogSelectHour(
@@ -1185,3 +1501,5 @@ fun DialogSelectHour(
         }
     }
 }
+
+
