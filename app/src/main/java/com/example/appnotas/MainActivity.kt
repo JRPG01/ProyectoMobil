@@ -12,13 +12,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.NoteAdd
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -97,31 +101,31 @@ fun PantallaPrincipal(
     multiUiState: UiState,
     windowSize: WindowWidthSizeClass
 ) {
-    val bottomNavItems = listOf(
-        BottomNavItem(
-            title = stringResource(id = R.string.bottom_first),
-            route = "inicio_screen",
-            selectedIcon = Icons.Filled.Home,
-            unSelectedIcon = Icons.Outlined.Home
-        ),
+   val bottomNavItems = listOf(
+       /*   BottomNavItem(
+             title = stringResource(id = R.string.bottom_first),
+             route = "inicio_screen",
+             selectedIcon = Icons.Filled.Home,
+             unSelectedIcon = Icons.Outlined.Home
+         ),*/
         BottomNavItem(
             title = stringResource(id = R.string.bottom_second),
             route = "notas_screen",
-            selectedIcon = Icons.Filled.Edit,
-            unSelectedIcon = Icons.Outlined.Edit
+            selectedIcon = Icons.Filled.NoteAdd,
+            unSelectedIcon = Icons.Outlined.NoteAdd
         ),
         BottomNavItem(
             title = stringResource(id = R.string.bottom_third),
             route = "tareas_screen",
-            selectedIcon = Icons.Filled.Build,
-            unSelectedIcon = Icons.Outlined.Build
-        ),
-        BottomNavItem(
+            selectedIcon = Icons.Filled.AddTask,
+            unSelectedIcon = Icons.Outlined.AddTask
+        )
+       /* BottomNavItem(
             title = stringResource(id = R.string.bottom_fourth),
             route = "ajustes_screen",
             selectedIcon = Icons.Filled.Settings,
             unSelectedIcon = Icons.Outlined.Settings
-        )
+        )*/
     )
 
     val navHostController = rememberNavController()

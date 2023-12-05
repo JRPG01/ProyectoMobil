@@ -34,8 +34,13 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material.icons.outlined.ThumbUp
+import androidx.compose.material.icons.outlined.VideoLibrary
+import androidx.compose.material.icons.outlined.VolumeMute
+import androidx.compose.material.icons.outlined.VolumeUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -865,7 +870,7 @@ fun DialogAddNote(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(imageVector = Icons.Outlined.Call, contentDescription = null)
+                            Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
                             Text(
                                 text = "PDF",
                                 style = MaterialTheme.typography.bodySmall
@@ -883,7 +888,7 @@ fun DialogAddNote(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(imageVector = Icons.Outlined.Call, contentDescription = null)
+                            Icon(imageVector = Icons.Outlined.VolumeUp, contentDescription = null)
                             Text(
                                 text = "Audio",
                                 style = MaterialTheme.typography.bodySmall
@@ -902,7 +907,7 @@ fun DialogAddNote(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(imageVector = Icons.Outlined.ThumbUp, contentDescription = null)
+                            Icon(imageVector = Icons.Outlined.VideoLibrary, contentDescription = null)
                             Text(
                                 text = "Video",
                                 style = MaterialTheme.typography.bodySmall
@@ -940,7 +945,7 @@ fun DialogAddNote(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.MoreVert,
+                            imageVector = Icons.Outlined.PhotoLibrary,
                             contentDescription = null
                         )
                         Text(

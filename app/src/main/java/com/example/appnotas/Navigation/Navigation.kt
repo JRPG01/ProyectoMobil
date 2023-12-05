@@ -21,7 +21,7 @@ fun NavigationHost(
     navigationType: MultiNavigationType
 ) {
 
-    NavHost(navController = navHostController, startDestination = ItemsMenu.InicioScreen.route){
+    NavHost(navController = navHostController, startDestination = ItemsMenu.NotaScreen.route){
         composable(route = ItemsMenu.NotaScreen.route){
             NotaScreen(multiViewModel,navigationType)
         }
