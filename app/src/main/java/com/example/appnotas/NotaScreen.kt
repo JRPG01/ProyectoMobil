@@ -10,6 +10,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -36,6 +38,7 @@ import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.outlined.VideoLibrary
@@ -652,6 +655,17 @@ fun DialogAddNote(
         mutableStateOf(false)
     }
 
+    val GaleriLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+    ) { uri: Uri? ->
+        uri?.let {
+            // Aquí puedes manejar la URI del archivo seleccionado
+            listImageUri = listImageUri + it // Agrega la Uri del archivo a la lista
+        }
+        imageUri = uri
+        showImage = !showImage
+    }
+
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
@@ -879,7 +893,8 @@ fun DialogAddNote(
                         vertical = 0.dp,
                         horizontal = 16.dp
                     )
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
@@ -960,6 +975,23 @@ fun DialogAddNote(
                             )
                         }
                     }
+                    IconButton(
+                        onClick = {
+                            GaleriLauncher.launch("image/*")
+                        },
+                        modifier = Modifier
+                            .width(75.dp)
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(imageVector = Icons.Outlined.PhotoLibrary, contentDescription = null)
+                            Text(
+                                text = "Galeria",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 }
 
                 // abrir archivos
@@ -972,11 +1004,11 @@ fun DialogAddNote(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.PhotoLibrary,
+                            imageVector = Icons.Outlined.MoreVert,
                             contentDescription = null
                         )
                         Text(
-                            text = "Galeria",
+                            text = "Multimedia",
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
